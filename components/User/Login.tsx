@@ -7,7 +7,6 @@ import {
   formErrorText,
   inputStyles,
   pinkGradientButton,
-  successPopper,
 } from "../Styles/CustomStyles";
 import * as Yup from "yup";
 import { UserAuth } from "../../context/AuthContext";
@@ -34,9 +33,11 @@ const newUserAccount: NewUserValues = {
   boosters: []
 };
 
+
+
 const Login = () => {
   const { openLoginModal } = useModalContext();
-  const [switchModals, setSwitchModals] = useState<boolean>(true);
+  const [switchModals, setSwitchModals] = useState<boolean>(false);
   const { createUser, signIn} = UserAuth();
   const [registerError, setRegisterError] = useState<string | null>(null);
   const [loginError, setLoginError] = useState<string | null>();
@@ -192,8 +193,9 @@ const Login = () => {
                 </Form>
               )}
             </Formik>
-            <p className="mt-5 text-primary-black bg-slate-300 rounded-md p-2">
-              Do not have account?{" "}
+            {!loginSuccess  &&
+            <p className="mt-5 p-2 bg-slate-50 rounded-md">
+            Have already account?{""}
               <span
                 onClick={switchFormik}
                 className="text-secondary-blue underline underline-offset-2 cursor-pointer"
@@ -201,6 +203,7 @@ const Login = () => {
                 Sign up now{" "}
               </span>
             </p>
+            }
           </>
         ) : (
           <>
@@ -308,8 +311,8 @@ const Login = () => {
               )}
             </Formik>
 
-            <p className="mt-5 text-primary-black bg-slate-300 rounded-md p-2">
-              Have already account?{" "}
+            <p className="mt-5 p-2 bg-slate-50 rounded-md">
+              {registerSuccess ? "" : "Have already account? " }{""}
               <span
                 onClick={switchFormik}
                 className="text-secondary-blue underline underline-offset-2 cursor-pointer"

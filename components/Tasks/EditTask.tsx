@@ -24,7 +24,7 @@ interface EditTaskProps {
 
 const EditTask: React.FC<EditTaskProps> = ({ task }) => {
   const { openEditTaskModal } = useModalContext();
-  const { user, getUserData, userData } = UserAuth();
+  const { user, getUserData, userData, xpMultipler, coinsMultipler } = UserAuth();
   const [sended, setSended] = useState<boolean>(false);
   const [formError, setFormError] = useState<string>("");
   const userFolders = userData?.folders;
@@ -89,8 +89,8 @@ const EditTask: React.FC<EditTaskProps> = ({ task }) => {
         // UPDATE STATS
         if (values.status === Status.Completed) {
           // CALC. NEW USER COINS AND XPS ON COMPLETED TASK
-          const newCoins = data.coins + getCoins(values.difficulty);
-          const newCurrentXp = data.currentXp + getXp(values.difficulty);
+          const newCoins = data.coins + getCoins(values.difficulty, coinsMultipler);
+          const newCurrentXp = data.currentXp + getXp(values.difficulty, xpMultipler);
           const newCompletedTasks = data.completedTasks + 1
 
           // LEVEL UP

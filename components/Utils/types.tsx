@@ -35,7 +35,8 @@ export interface Items {
   name: string,
   description: string,
   img: string,
-  price: number
+  price: number,
+  isBooster: boolean
 }
 
 export interface Boosters {
@@ -45,6 +46,7 @@ export interface Boosters {
   multiply: number,
   price: number,
   type: string
+  isBooster: boolean
 }
 
 export interface Task {

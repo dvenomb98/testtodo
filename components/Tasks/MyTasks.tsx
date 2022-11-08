@@ -44,7 +44,7 @@ const MyTasks: React.FC<TasksProps> = ({
         <div>
           <h2 className="text-h1 uppercase font-headFamily">My tasks</h2>
 
-          <div className="flex flex-col mt-5 lg:gap-x-5 lg:grid lg:grid-cols-2 lg:auto-rows-fr">
+          <div className="flex flex-col mt-5 gap-10 lg:grid lg:grid-cols-2 lg:auto-rows-fr">
             {filteredByPage.length ? (
               filteredByPage
                 .filter((task: any) => {

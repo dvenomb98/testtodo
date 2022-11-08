@@ -10,13 +10,10 @@ const InnerFooter = () => {
   return (
     <footer className={`bg-slate-200 dark:bg-slate-800`}>
       <Layout >
-        <div className="flex flex-col">
-          <h1
-            className={`${gradientText} font-headFamily text-h2 font-semibold mb-4`}
-          >
-            REAL LIFE MMORPG
-          </h1>
-          <ul className="grid grid-cols-2 items-center gap-2">
+        <div className="flex flex-col gap-10">
+          <p className="text-primary-gray border-b md:w-1/2 border-primary-gray pb-2 text-h3">Important links</p>
+          
+          <ul className="flex flex-col md:grid md:grid-cols-2 md:items-center gap-5">
             <li className={linkClasses}>Dashboard</li>
             <li className={linkClasses}>Market place</li>
             <li className={linkClasses}>Leaderboard</li>
@@ -25,7 +22,14 @@ const InnerFooter = () => {
             <li className={linkClasses}>Contact us</li>
             
           </ul>
-          <p className="mt-8 text-primary-gray">@ Daniel Bílek 2022</p>
+          <div className="flex flex-col md:flex-row md:justify-between gap-5">
+          <h1
+            className={`${gradientText} font-headFamily text-h2 font-semibold `}
+          >
+            REAL LIFE MMORPG
+          </h1>
+          <p className=" text-primary-gray">@ Daniel Bílek 2022</p>
+          </div>
         </div>
       </Layout>
     </footer>

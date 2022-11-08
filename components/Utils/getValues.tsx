@@ -30,23 +30,23 @@ export const getDifficultyTextColor = (difficulty: string) => {
   }
 };
 
-export const getXp = (difficulty: string) => {
+export const getXp = (difficulty: string, multipler: number) => {
   if (difficulty === Difficulty.Low) {
-    return 15;
+    return 15 * multipler
   } else if (difficulty === Difficulty.Medium) {
-    return 25;
+    return 25 * multipler
   } else if (difficulty === Difficulty.Hard) {
-    return 40;
+    return 40 * multipler
   }
 };
 
-export const getCoins = (difficulty: string) => {
+export const getCoins = (difficulty: string, multipler: number) => {
   if (difficulty === Difficulty.Low) {
-    return 50;
+    return 50 * multipler;
   } else if (difficulty === Difficulty.Medium) {
-    return 75;
+    return 75 * multipler;
   } else if (difficulty === Difficulty.Hard) {
-    return 125;
+    return 125 * multipler;
   }
 };
 

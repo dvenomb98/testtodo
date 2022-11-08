@@ -17,15 +17,12 @@ import CreateFolder from "../components/Filter/CreateFolder";
 
 
 const Main: NextPage = () => {
-  const { user, userData, getUserData } = UserAuth();
+  const { userData, getUserData } = UserAuth();
   const router = useRouter();
   const [searchValue, setSearchValue] = useState("")
   const [selectedFolder, setSelectedFolder] = useState<string>("All")
   const { showNewTaskModal } = useModalContext()
 
-  if (!user) {
-    router.push("/");
-  }
 
   const titles = [
   {title: "Create a new task", func: showNewTaskModal, icon: <WrenchScrewdriverIcon className={iconClassesSubNav} /> }

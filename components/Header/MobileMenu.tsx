@@ -66,7 +66,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
 
           <NavMenu setToggleMenu={setToggleMenu} />
 
-          <div className="flex items-center justify-between w-full text-primary-gray mt-10">
+          <div className="flex items-center justify-between w-full text-primary-gray mt-10 mb-20">
             <p>Switch theme</p>
             <Switch
               checked={theme === "dark"}

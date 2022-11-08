@@ -6,7 +6,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
-import { doc, getDoc, collection, getDocs} from "firebase/firestore";
+import { doc, getDoc} from "firebase/firestore";
 import { MarketPlace } from "../components/Utils/enums";
 
 const UserContext = createContext();
@@ -16,6 +16,9 @@ export const AuthContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState({});
   const [market, setMarket] = useState([]);
+
+  const xpMultipler = (userData?.boosters || []).find(booster => booster.type === "xp")?.multiply || 1
+  const coinsMultipler = (userData?.boosters || []).find(booster => booster.type === "coins")?.multiply || 1
 
   const signIn = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
@@ -84,7 +87,9 @@ export const AuthContextProvider = ({ children }) => {
         isLoading,
         userData,
         getUserData,
-        market
+        market,
+        xpMultipler,
+        coinsMultipler
       }}
     >
       {!isLoading && children}

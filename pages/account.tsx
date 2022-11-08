@@ -25,7 +25,7 @@ import { Boosters, Items } from "../components/Utils/types";
 
 const boxStyles = "flex flex-col gap-2";
 const boxHeaderStyles = "text-primary-gray";
-const boxValueStyles = "font-bold text-h4";
+const boxValueStyles = "font-semibold text-h4";
 
 const Account: NextPage = () => {
   const { userData } = UserAuth();
@@ -96,25 +96,25 @@ const Account: NextPage = () => {
               </div>
               <div className={`${bgLight} rounded-md p-10 flex flex-col gap-5`}>
                 <div className={boxStyles}>
-                  <p className={boxHeaderStyles}>Display name</p>
+                  <p className={boxHeaderStyles}>Display name:</p>
                   <p className={boxValueStyles}>
                     {name} {surname}
                   </p>
                 </div>
                 <div className={boxStyles}>
-                  <p className={boxHeaderStyles}>Email</p>
+                  <p className={boxHeaderStyles}>Email:</p>
                   <p className={boxValueStyles}>{email}</p>
                 </div>
               </div>
 
               <div className={`${bgLight} rounded-md p-10 flex flex-col gap-5`}>
                 <div className={boxStyles}>
-                  <p className={boxHeaderStyles}>Current tasks</p>
+                  <p className={boxHeaderStyles}>Current tasks:</p>
                   <p className={boxValueStyles}>{tasks?.length}</p>
                 </div>
 
                 <div className={boxStyles}>
-                  <p className={boxHeaderStyles}>Completed tasks</p>
+                  <p className={boxHeaderStyles}>Completed tasks:</p>
                   <p className={boxValueStyles}>{completedTasks}</p>
                 </div>
 
@@ -140,7 +140,7 @@ const Account: NextPage = () => {
                     <div className={itemsContainer}>
                       {userData.boosters?.map(
                         (item: Boosters, index: number) => (
-                          <Item booster={item} key={index} />
+                          <Item booster={item} key={index} hideButton />
                         )
                       )}
                     </div>
@@ -150,7 +150,7 @@ const Account: NextPage = () => {
                   <div className={boxClasses}>
                     <div className={itemsContainer}>
                       {userData.items?.map((item: Items, index: number) => (
-                        <Item item={item} key={index} />
+                        <Item item={item} key={index} hideButton />
                       ))}
                     </div>
                   </div>

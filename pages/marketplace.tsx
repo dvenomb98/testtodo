@@ -25,10 +25,11 @@ export const boxClasses = "flex flex-col gap-5";
 const Marketplace: NextPage = () => {
   const { userData, market, user, getUserData } = UserAuth();
   const [showInventory, setShowInventory] = useState<boolean>(false);
-  const [formError, setFormError] = useState<boolean>(false);
+  const [newError, setNewError] = useState("")
   const { openMarketModal, showMarketModal, hideAllModals} = useModalContext()
   const router = useRouter();
   const { theme } = useTheme();
+  const [loading, setLoading] = useState<boolean>(false)
 
   const { items, boosters } = market;
 
@@ -46,53 +47,52 @@ const Marketplace: NextPage = () => {
 
   // TODO: REWORK ITEM COMPONENT AND DO ONE FUNCTION FOR BOTH BUYITEM X BUYBOOSTER
 
-  const buyItem = async (item: Items) => {
+  const buySingleItem = async (item: Items | Boosters): Promise<boolean> =>  {
     try {
-      setFormError(false)
+      setNewError("")
+      setLoading(true)
       await runTransaction(db, async (transaction) => {
         const ref = doc(db, "users", user.uid);
 
         const sfDoc = await transaction.get(ref);
-
+        
+      
         if (!sfDoc.exists()) {
-          throw "Document does not exist!";
+          setNewError("There was problem during transaction, please try it again.")
+          setLoading(false)
+          showMarketModal()
+          return false
+        }
+        else if(userData.coins < item.price) {
+          setNewError("You do not have enough coins to complete transaction.")
+          setLoading(false)
+          showMarketModal()
+          return false
         }
 
-        const newItem = [item, ...sfDoc.data().items];
-        transaction.update(ref, { items: newItem });
-      });
-      await getUserData();
-      await showMarketModal()
-      return
-    } catch (e) {
-      await setFormError(false);
-      await showMarketModal()
-    }
-  };
-
-  const buyBooster = async (booster: Boosters) => {
-    try {
-      setFormError(false)
-      await runTransaction(db, async (transaction) => {
-        const ref = doc(db, "users", user.uid);
-
-        const sfDoc = await transaction.get(ref);
-
-        if (!sfDoc.exists()) {
-          throw "Document does not exist!";
+        else if(item.isBooster) {
+          const newCoins = sfDoc.data().coins - item.price
+          const newBooster = [item, ...sfDoc.data().boosters];
+          transaction.update(ref, { boosters: newBooster, coins: newCoins });
         }
 
-        const newBooster = [booster, ...sfDoc.data().boosters];
-        transaction.update(ref, { boosters: newBooster });
+        else if(!item.isBooster) {
+          const newCoins = sfDoc.data().coins - item.price
+          const newItem = [item, ...sfDoc.data().items];
+          transaction.update(ref, { items: newItem, coins: newCoins });
+        }
       });
-      await getUserData();
-      await showMarketModal()
-      return
+      await getUserData()
+      setLoading(false)
+      showMarketModal()
+      return true
     } catch (e) {
-      await setFormError(true);
-      await showMarketModal()
+      setNewError("There was problem during transaction. Please, try it again later");
+      setLoading(false)
+      showMarketModal()
+      return false
     }
-  };
+  }
 
   return (
     userData && (
@@ -139,7 +139,7 @@ const Marketplace: NextPage = () => {
                     <p className={headerClass}>Boosters</p>
                     <div className={itemsContainer}>
                       {userData.boosters?.map((item: Boosters, index: number) => (
-                        <Item booster={item} key={index} />
+                        <Item booster={item} key={index} hideButton />
                       ))}
                     </div>
                   </div>
@@ -149,7 +149,7 @@ const Marketplace: NextPage = () => {
                     <p className={headerClass}>Items</p>
                     <div className={itemsContainer}>
                       {userData.items?.map((item: Items, index: number) => (
-                        <Item item={item} key={index} />
+                        <Item item={item} key={index} hideButton />
                       ))}
                     </div>
                   </div>
@@ -168,7 +168,7 @@ const Marketplace: NextPage = () => {
                       <p className={headerClass}>Boosters</p>
                       <div className={itemsContainer}>
                         {boosters?.map((item: Boosters, index: number) => (
-                          <Item booster={item} key={index} buyBooster={buyBooster} />
+                          <Item booster={item} key={index} buySingleItem={buySingleItem} loading={loading} />
                         ))}
                       </div>
                     </div>
@@ -178,7 +178,7 @@ const Marketplace: NextPage = () => {
                       <p className={headerClass}>Items</p>
                       <div className={itemsContainer}>
                         {items?.map((item: Items, index: number) => (
-                          <Item item={item} key={index} buyItem={buyItem} />
+                          <Item item={item} key={index} buySingleItem={buySingleItem} loading={loading} />
                         ))}
                       </div>
                     </div>
@@ -189,13 +189,13 @@ const Marketplace: NextPage = () => {
           </Layout>
         </div>
         <InnerFooter />
-        <Modal openModal={openMarketModal} onModalEnter={() => {}} modalType={formError ? ModalType.Error : ModalType.Success}>
+        <Modal openModal={openMarketModal} onModalEnter={() => {}} modalType={newError ? ModalType.Error : ModalType.Success}>
         <div className="p-5">
-        {formError ? (
+        {newError ? (
           <div className="text-white flex gap-3 items-center">
           <XCircleIcon className="w-8 h-8" />
          <p>
-           There was error during transaction. Please try it again, later.{" "}
+           {newError}{" "}
            <span
              onClick={hideAllModals}
              className="cursor-pointer font-bold underline underline-offset-2"

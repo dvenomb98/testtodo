@@ -6,18 +6,18 @@ import { Boosters, Items } from "../Utils/types";
 interface ItemProps {
   item?: Items;
   booster?: Boosters;
-  buyBooster?: (booster: Boosters) => void
-  buyItem?: (item: Items) => void
+  buySingleItem?: (item: Items | Boosters) => void
+  loading?: boolean
+  hideButton?: boolean
 }
 
-const Item: React.FC<ItemProps> = ({ item, booster, buyBooster, buyItem }) => {
+const Item: React.FC<ItemProps> = ({ item, booster, buySingleItem, loading , hideButton}) => {
 
   const { userData } = UserAuth()
 
   if (item && !booster) {
 
     const alreadyBought = userData?.items?.some((it: Items) => it.name === item.name)
-
 
     return (
       <div
@@ -31,9 +31,11 @@ const Item: React.FC<ItemProps> = ({ item, booster, buyBooster, buyItem }) => {
         <div className="flex flex-col justify-between gap-3 p-4 leading-normal">
           <h5 className="text-2xl font-bold tracking-tight ">{item.name}</h5>
           <p className="font-normal">{item.description}</p>
-          <button onClick={() => buyItem && !alreadyBought && buyItem(item)}  className={`${pinkGradientButtonSecondary}`}>
+          {!hideButton && 
+          <button disabled={alreadyBought || loading} onClick={() => buySingleItem && buySingleItem(item)} className={`${pinkGradientButtonSecondary}`}>
             {alreadyBought ? "Owned" : `${item.price} Coins` }
           </button>
+          }
         </div>
       </div>
     );
@@ -54,9 +56,11 @@ const Item: React.FC<ItemProps> = ({ item, booster, buyBooster, buyItem }) => {
         <div className="flex flex-col justify-between gap-3 p-4 leading-normal">
           <h5 className="text-2xl font-bold tracking-tight ">{booster.name}</h5>
           <p className="font-normal">{booster.description}</p>
-          <button onClick={() => buyBooster && !alreadyBought && buyBooster(booster)} className={`${pinkGradientButtonSecondary}`}>
+          {!hideButton && 
+          <button disabled={alreadyBought || loading} onClick={() => buySingleItem && buySingleItem(booster)} className={`${pinkGradientButtonSecondary}`}>
           {alreadyBought ? "Owned" :`${booster.price} Coins`}
           </button>
+          }
         </div>
       </div>
     );
