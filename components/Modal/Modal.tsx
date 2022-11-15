@@ -1,25 +1,36 @@
-import React, {Fragment, useRef} from 'react'
-import { Dialog, Transition } from '@headlessui/react'
-import { useModalContext } from './ModalContext'
-import { ModalType } from '../Utils/enums'
+import React, { Fragment, useRef } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
+import { useModalContext } from './ModalContext';
+import { ModalType } from '../Utils/enums';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 interface ModalProps {
-    children: JSX.Element
-    openModal: boolean
-    modalType?: ModalType
-    onModalEnter: () => void
+  children: JSX.Element;
+  openModal: boolean;
+  modalType?: ModalType;
+  onModalEnter: () => void;
+  cancelButton?: boolean;
 }
 
+const Modal: React.FC<ModalProps> = ({
+  children,
+  openModal,
+  modalType,
+  onModalEnter,
+  cancelButton,
+}) => {
+  const cancelButtonRef = useRef(null);
 
-const Modal: React.FC<ModalProps> = ({children, openModal, modalType, onModalEnter}) => {
-
-    const cancelButtonRef = useRef(null)
-
-    const {hideAllModals} = useModalContext()
+  const { hideAllModals } = useModalContext();
 
   return (
     <Transition.Root show={openModal} as={Fragment} beforeEnter={onModalEnter}>
-      <Dialog as="div" className="relative z-50" initialFocus={cancelButtonRef} onClose={hideAllModals}>
+      <Dialog
+        as="div"
+        className="relative z-50"
+        initialFocus={cancelButtonRef}
+        onClose={hideAllModals}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-500"
@@ -43,15 +54,25 @@ const Modal: React.FC<ModalProps> = ({children, openModal, modalType, onModalEnt
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className={`${modalType ? modalType : "bg-slate-50"} relative  overflow-hidden rounded-sm text-left shadow-xl sm:my-8 w-full sm:max-w-lg`}>
+              <Dialog.Panel
+                className={`${
+                  modalType ? modalType : 'bg-slate-50'
+                } relative overflow-hidden rounded-sm text-left shadow-xl sm:my-8 w-full sm:max-w-lg`}
+              >
                 {children}
+                {cancelButton && (
+                  <XMarkIcon
+                    className="absolute w-5 h-5 top-5 right-5 text-black cursor-pointer"
+                    onClick={hideAllModals}
+                  />
+                )}
               </Dialog.Panel>
             </Transition.Child>
           </div>
         </div>
       </Dialog>
     </Transition.Root>
-  )
-}
+  );
+};
 
-export default Modal
+export default Modal;
