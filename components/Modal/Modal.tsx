@@ -55,6 +55,7 @@ const Modal: React.FC<ModalProps> = ({
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel
+                ref={cancelButtonRef}
                 className={`${
                   modalType ? modalType : 'bg-slate-50'
                 } relative overflow-hidden rounded-sm text-left shadow-xl sm:my-8 w-full sm:max-w-lg`}
